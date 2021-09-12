@@ -18,7 +18,7 @@ router.get( '/', getTags )
 router.post(
     '/new',
     [
-        check('lid','lid no esta').not().isEmpty(),
+        check('tid','tid no esta').not().isEmpty(),
         check('uid','uid no esta').not().isEmpty(),
         check('name','name no esta').not().isEmpty(),
         //check('entries','uid no esta').not().isEmpty(),
@@ -31,7 +31,7 @@ router.post(
 router.put(
     '/:id',
     [
-        check('lid','lid no esta').not().isEmpty(),
+        check('tid','tid no esta').not().isEmpty(),
         check('uid','uid no esta').not().isEmpty(),
         check('name','name no esta').not().isEmpty(),
         //check('entries','entries no esta').not().isEmpty(),

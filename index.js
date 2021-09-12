@@ -13,7 +13,7 @@ dbConnection();
 app.use(cors()); //Algo necesario para la seguridad de la API 
 
 //Parse bodies
-app.use( express.json() );
+app.use( express.json({limit: '10mb'}) ); //Permite aumentar el limite de tamaño de los objetos que se crean
 
 //Rutas
 app.use('/api/auth', require('./routes/auth'));
@@ -25,6 +25,8 @@ app.use('/api/settings', require('./routes/settings'));
 app.use('/api/tag', require('./routes/tag'));
 
 app.use('/api/location', require('./routes/location'));
+
+app.use('/api/entry', require('./routes/entry'));
 
 
 //Escuchar peticiones

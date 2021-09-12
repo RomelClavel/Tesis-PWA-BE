@@ -1,10 +1,6 @@
 const express = require('express');
-const { validationResult } = require('express-validator');
 const Location = require('../models/Location');
 
-
-
-//HAY QUE PROBAR TODO ESTO
 
 const getLocations = async ( req, res = express.response ) => {
 
@@ -137,7 +133,11 @@ const deleteLocation = async ( req, res = express.response ) => {
 
         await Location.findByIdAndDelete( location._id );
 
-        //BORRAR EL ID DE TODAS LAS ENTRADAS
+        //Borrar Location id de todas las entradas que lo posean
+        await Entry.updateMany(
+            { location: location.lid },
+            { $set: { location: '' } }
+        )
 
         res.json({ ok:true });
 

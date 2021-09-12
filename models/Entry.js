@@ -1,7 +1,6 @@
-/*
+
 const { Schema, model } = require('mongoose');
 
-Reevaluar los valores de require
 
 const EntrySchema = Schema({
 
@@ -33,21 +32,20 @@ const EntrySchema = Schema({
         type: String,
     },
     weather: {
-        type: String, //Preselect
+        type: String, 
     },
     trash: {
         type: Boolean,
         required:true
     },
     tags:[{
-        t_id; String,
+        type: String,
     }],
     location: {
-        l_id: String,
+        type: String,
     }
 
 })
 
 
 module.exports = model( 'Entry', EntrySchema ); 
-*/

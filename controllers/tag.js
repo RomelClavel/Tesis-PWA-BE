@@ -1,5 +1,6 @@
 const express = require('express');
 const { validationResult } = require('express-validator');
+const Entry = require('../models/Entry');
 const Tag = require('../models/Tag');
 
 
@@ -138,7 +139,14 @@ const deleteTag = async ( req, res = express.response ) => {
 
         await Tag.findByIdAndDelete( tag._id );
 
-        //BORRAR EL ID DE TODAS LAS ENTRADAS
+        //Logica Borrar id de todas las entradas
+        
+        await Entry.updateMany(
+            { tags: tag.tid },
+            { $pull: { tags: tag.tid } }
+        )
+        
+
 
         res.json({ ok:true });
 
