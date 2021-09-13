@@ -229,8 +229,8 @@ const deleteEntry = async ( req, res = express.response ) => {
         )
 
         await Card.updateMany(
-            { entries: entry.eid },
-            { $pull: { 'entries.e_id': entry.eid } }
+            { "entries.e_id": "Entry 4"  },
+            { $pull: { entries: { e_id: entry.eid } } }
         )
 
         //Logica de borrar id de todas las cards, locations y tags a los que pertenece
@@ -256,3 +256,28 @@ module.exports = {
     deleteEntry,
     
 }
+
+/*
+const entry = {
+    eid : generateID(), 
+    cid : cardID[0].cid, 
+    uid : cardID[0].uid, 
+    photos : entryImgState,
+    date : datePickerState.time, //Revisar que cosas guarda el campo DATE
+    title : title,
+    text : text,
+    weather : selectedWeather,
+    tags : tagsCE,
+    location: locationCE,
+    trash : false,
+}
+
+TOKEN
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MGRlZGMzOTBmMTU3MTM2MDgwYmE2OGIiLCJpYXQiOjE2MjUyMTgxMDZ9.0zrpWuepw1SARIStmz-TX4LKK-xONdhfa-Dk_T3l_7M
+
+CARD ID 1 => 94e32de2-b024-4f62-b9e4-e5b07528a862
+CARD ID 2 => 4edafa28-bc93-48a5-bb39-424284814bd6
+
+UID => 60dedc390f157136080ba68b
+
+*/
