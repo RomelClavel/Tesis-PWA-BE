@@ -44,7 +44,7 @@ const createEntry = async ( req, res = express.response ) => {
         if (entry.location!==''){
             await Location.updateOne(
                 { lid : entry.location },
-                { $push: { entries : entry.eid } } ///MAL
+                { $push: { entries : entry.eid } } 
             ) 
         }
         
@@ -180,11 +180,7 @@ const updateEntry = async ( req, res = express.response ) => {
             msj: 'Error en metodo'
         })
 
-    }
-
-
-    
-
+    } 
 }
 
 const deleteEntry = async ( req, res = express.response ) => {
@@ -229,7 +225,7 @@ const deleteEntry = async ( req, res = express.response ) => {
         )
 
         await Card.updateMany(
-            { "entries.e_id": "Entry 4"  },
+            { "entries.e_id": entry.eid  },
             { $pull: { entries: { e_id: entry.eid } } }
         )
 
@@ -249,35 +245,155 @@ const deleteEntry = async ( req, res = express.response ) => {
 
 }
 
+const trashEntry = async ( req, res = express.response ) => {
+
+    const entryId = req.params.id; //o _id
+    const uid = req.uid; 
+
+
+    try {
+        
+
+        const [entry] = await Entry.find( {eid: entryId} );
+
+        if ( !entry ) {
+
+            return res.status(404).json({
+                ok: false,
+                msj: 'Entry no existe'
+            })
+        }
+
+        //Validación para confirmar que los usuario que lo mandan y al que peternece son los mismos
+        if ( entry.uid.toString() !==  uid) {
+
+            return res.status(401).json({
+                ok: false,
+                msj: 'No tiene el privilegio de editar esta entrada'
+            })
+        }
+
+        const updatedEntry = await Entry.updateOne( 
+            { eid: entryId },
+            { trash: true }
+         );
+
+         await Tag.updateMany(
+            { entries: entryId },
+            { $pull: { entries: entryId } }
+        )
+
+        await Location.updateMany(
+            { entries: entryId },
+            { $pull: { entries: entryId } }
+        )
+
+        await Card.updateMany(
+            { "entries.e_id": entryId  },
+            { $pull: { entries: { e_id: entryId } } }
+        )
+
+        res.json({
+            ok:true,
+            entry: updatedEntry
+        })
+
+
+
+    } catch (error) {
+
+        console.log(error)
+        res.status(500).json({
+            ok: false,
+            msj: 'Error en metodo'
+        })
+
+    }
+
+}
+
+
+const untrashEntry = async ( req, res = express.response ) => {
+
+    const entryId = req.params.id; //o _id
+    const uid = req.uid; 
+
+
+    try {
+        
+
+        const [entry] = await Entry.find( {eid: entryId} );
+
+        if ( !entry ) {
+
+            return res.status(404).json({
+                ok: false,
+                msj: 'Entry no existe'
+            })
+        }
+
+        //Validación para confirmar que los usuario que lo mandan y al que peternece son los mismos
+        if ( entry.uid.toString() !==  uid) {
+
+            return res.status(401).json({
+                ok: false,
+                msj: 'No tiene el privilegio de editar esta entrada'
+            })
+        }
+
+        //Logica de editar los tags, locations o cards 
+
+        const updatedEntry = await Entry.updateOne( 
+            { eid: entryId },
+            { trash: false }
+         );
+
+        //Añadir eid al arreglo de entries de Tags  
+        if(entry.tags.length!==0){
+            await Tag.updateMany(
+                { tid : { $in: entry.tags } },
+                { $push: { entries : entry.eid } }
+            )
+        }          
+         
+
+        //Añadir eid al arreglo de entries de Locations
+        if (entry.location!==''){
+            await Location.updateOne(
+                { lid : entry.location },
+                { $push: { entries : entry.eid } } 
+            ) 
+        }
+        
+        //Añadir eid al arreglo de entries de Cards
+        await Card.updateOne(
+            { cid: entry.cid },
+            { $push: { entries: { e_id: entry.eid, e_date: entry.date.toString() } } } //Si hay un error revisar el to string
+        ) 
+        
+        res.json({
+            ok:true,
+            entry: updatedEntry
+        })
+
+
+
+    } catch (error) {
+
+        console.log(error)
+        res.status(500).json({
+            ok: false,
+            msj: 'Error en metodo'
+        })
+
+    } 
+}
+
 module.exports = {
     getEntries,
     createEntry,
     updateEntry,
     deleteEntry,
-    
+    trashEntry,
+    untrashEntry
 }
-
-/*
-const entry = {
-    eid : generateID(), 
-    cid : cardID[0].cid, 
-    uid : cardID[0].uid, 
-    photos : entryImgState,
-    date : datePickerState.time, //Revisar que cosas guarda el campo DATE
-    title : title,
-    text : text,
-    weather : selectedWeather,
-    tags : tagsCE,
-    location: locationCE,
-    trash : false,
-}
-
-TOKEN
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MGRlZGMzOTBmMTU3MTM2MDgwYmE2OGIiLCJpYXQiOjE2MjUyMTgxMDZ9.0zrpWuepw1SARIStmz-TX4LKK-xONdhfa-Dk_T3l_7M
-
-CARD ID 1 => 94e32de2-b024-4f62-b9e4-e5b07528a862
-CARD ID 2 => 4edafa28-bc93-48a5-bb39-424284814bd6
-
-UID => 60dedc390f157136080ba68b
-
-*/

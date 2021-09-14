@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 
 const { fieldValidator } = require('../middlewares/field-validation')
 const { JWTValidator } = require('../middlewares/jwt-validation');
-const { getEntries, createEntry, updateEntry, deleteEntry} = require('../controllers/entry')
+const { getEntries, createEntry, updateEntry, deleteEntry, trashEntry, untrashEntry} = require('../controllers/entry')
 
 //Validar el JWT antes de cada ruta
 router.use( JWTValidator );
@@ -34,11 +34,30 @@ router.put(
         check('uid','uid no esta').not().isEmpty(),
         check('cid','cid no esta').not().isEmpty(),
         check('date','date no esta').not().isEmpty(),
-        check('trash','latitude no esta').not().isEmpty(),
+        check('trash','trash no esta').not().isEmpty(),
     
         fieldValidator
     ],
     updateEntry
+    );
+    
+router.put(
+    '/trash/:id',
+    trashEntry
+    );
+    
+router.put(
+    '/untrash/:id',
+    [
+        check('eid','eid no esta').not().isEmpty(),
+        check('uid','uid no esta').not().isEmpty(),
+        check('cid','cid no esta').not().isEmpty(),
+        check('date','date no esta').not().isEmpty(),
+        check('trash','trash no esta').not().isEmpty(),
+    
+        fieldValidator
+    ],
+    untrashEntry
     );
     
 router.delete('/delete/:id', deleteEntry );
