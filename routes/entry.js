@@ -50,9 +50,7 @@ router.put(
     '/untrash/:id',
     [
         check('eid','eid no esta').not().isEmpty(),
-        check('uid','uid no esta').not().isEmpty(),
         check('cid','cid no esta').not().isEmpty(),
-        check('date','date no esta').not().isEmpty(),
         check('trash','trash no esta').not().isEmpty(),
     
         fieldValidator
@@ -60,6 +58,6 @@ router.put(
     untrashEntry
     );
     
-router.delete('/delete/:id', deleteEntry );
+router.delete('/delete', deleteEntry );
 
 module.exports= router;

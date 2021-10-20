@@ -27,10 +27,9 @@ const SettingsSchema = Schema({
         type: String, //Preselect [photos, tags, locations, weather]
         required: true
     }],
-    language : {
-        type: String
+    auth : {
+        type: Boolean,
     }
-
 })
 
 

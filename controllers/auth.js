@@ -46,7 +46,7 @@ const createUser =  async  (req, res = express.response) => {
                 time: "9:00",
             },
             order: [ "photos", "tags", "locations", "weather" ],
-            language:"",
+            auth:false
         });
 
         await settings.save()

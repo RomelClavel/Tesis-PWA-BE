@@ -185,25 +185,34 @@ const updateEntry = async ( req, res = express.response ) => {
 
 const deleteEntry = async ( req, res = express.response ) => {
 
-    const entryId = req.params.id; //o _id
+    //const entryId = req.params.id; //o _id
     const uid = req.uid; 
+    const {entries} = req.body;
 
+    console.log('Delete')
+    console.log(entries)
 
     try {
         
 
-        const [entry] = await Entry.find( {eid: entryId} );
+        const entry = await Entry.find( {eid:{ $in: entries }});
 
-        if ( !entry ) {
+        console.log(entry)
+
+        if ( entry.length===0 ) {
+
+            console.log('entro en entry vacio')
 
             return res.status(404).json({
                 ok: false,
-                msj: 'Entry no existe'
+                msj: 'No se consiguieron entries'
             })
         }
 
         //Validación para confirmar que los usuario que lo mandan y al que peternece son los mismos
-        if ( entry.uid.toString() !==  uid) {
+        if ( entry[0].uid.toString() !==  uid) {
+
+            console.log('entro uid malo')
 
             return res.status(401).json({
                 ok: false,
@@ -211,27 +220,17 @@ const deleteEntry = async ( req, res = express.response ) => {
             })
         }
 
+        //NO SE LLAMO
 
-        await Entry.findByIdAndDelete( entry._id );
+        
+        await Entry.deleteMany( { eid : { $in: entries } } )
 
-        await Tag.updateMany(
-            { entries: entry.eid },
-            { $pull: { entries: entry.eid } }
-        )
-
-        await Location.updateMany(
-            { entries: entry.eid },
-            { $pull: { entries: entry.eid } }
-        )
-
-        await Card.updateMany(
-            { "entries.e_id": entry.eid  },
-            { $pull: { entries: { e_id: entry.eid } } }
-        )
 
         //Logica de borrar id de todas las cards, locations y tags a los que pertenece
+        //se hace en el trash entry por lo que no se tiene que hacer aqui
 
         res.json({ ok:true });
+        
 
     } catch (error) {
 
@@ -242,6 +241,7 @@ const deleteEntry = async ( req, res = express.response ) => {
         })
 
     }
+
 
 }
 
@@ -318,9 +318,8 @@ const untrashEntry = async ( req, res = express.response ) => {
     const entryId = req.params.id; //o _id
     const uid = req.uid; 
 
-
+    
     try {
-        
 
         const [entry] = await Entry.find( {eid: entryId} );
 
@@ -387,6 +386,7 @@ const untrashEntry = async ( req, res = express.response ) => {
         })
 
     } 
+    
 }
 
 module.exports = {
