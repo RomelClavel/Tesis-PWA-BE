@@ -43,7 +43,7 @@ const createUser =  async  (req, res = express.response) => {
             photo:"",
             notification: {
                 active: false,
-                time: "9:00",
+                time: new Date(),  //Poner date
             },
             order: [ "photos", "tags", "locations", "weather" ],
             auth:false
