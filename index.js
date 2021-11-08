@@ -28,6 +28,7 @@ app.use('/api/location', require('./routes/location'));
 
 app.use('/api/entry', require('./routes/entry'));
 
+app.use('/api/restore', require('./routes/restore'));
 
 //Escuchar peticiones
 app.listen( process.env.PORT, () => {

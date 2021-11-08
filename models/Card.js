@@ -27,7 +27,7 @@ const CardSchema = Schema({
     },
     entries: [{
         e_id: String,
-        e_date: String
+        e_date: String //Debo cambiarlo
     }]
 
 
