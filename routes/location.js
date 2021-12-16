@@ -19,7 +19,6 @@ router.post(
         check('lid','lid no esta').not().isEmpty(),
         check('uid','uid no esta').not().isEmpty(),
         check('name','name no esta').not().isEmpty(),
-        check('description','description no esta').not().isEmpty(),
         check('latitude','latitude no esta').not().isEmpty(),
         check('longitude','longitude no esta').not().isEmpty(),
 
@@ -34,7 +33,6 @@ router.put(
         check('lid','lid no esta').not().isEmpty(),
         check('uid','uid no esta').not().isEmpty(),
         check('name','name no esta').not().isEmpty(),
-        check('description','description no esta').not().isEmpty(),
         check('latitude','latitude no esta').not().isEmpty(),
         check('longitude','longitude no esta').not().isEmpty(),
     
