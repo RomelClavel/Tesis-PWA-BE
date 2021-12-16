@@ -17,7 +17,7 @@ const LocationSchema = Schema({
     },
     description: {
         type: String,
-        required:true
+        //required:true
     },
     latitude:{
         type:String,
