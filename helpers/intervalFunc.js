@@ -11,9 +11,8 @@ const admin = require('firebase-admin');
 
             const settings = await Settings.find({"notification.active":true, "notification.token" : {"$exists" : true, "$ne" : ""}}); 
         
-            let dateNow = new Date()
-            console.log()
-            
+            let dateNow = new Date()            
+
             const filteredSettings = settings.filter(({notification})=>(
                                                                     notification.time.getHours()===dateNow.getHours() && 
                                                                     notification.time.getMinutes()===dateNow.getMinutes()
@@ -21,31 +20,10 @@ const admin = require('firebase-admin');
 
                                                     
             const registrationTokens = filteredSettings.map((settings)=>(settings.notification.token))
-            console.log(registrationTokens)
-
            
-            /*
-            const payload = {
-                notification: {
-                    title: 'Reminder',
-                    body: 'Jaja'
-                }
-            };
-            const options = {
-                priority: 'high'
-            };
-            */
-
             const message = {
 
-                notification: {
-                    
-                    title:"PWA Card Diary Tesis",
-                    body: 'Here is a notification body!',
-                },
-                icon: 'https://is4-ssl.mzstatic.com/image/thumb/Purple123/v4/95/22/9d/95229d6e-621b-ec09-6564-205b924aa380/source/200x200bb.jpg',
-                tokens: registrationTokens,
-                
+                tokens: registrationTokens,  
             };
 
             admin.messaging().sendMulticast(message)
