@@ -2,6 +2,15 @@ const express = require('express');
 require('dotenv').config();
 const { dbConnection } = require('./database/config');
 const cors = require('cors')
+const admin = require('firebase-admin');
+const serviceAccount = require('./fcm-admin-credentials.json');
+
+const interval = require('./helpers/intervalFunc');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
 
 // Crear el servidor de Express
 const app = express();
@@ -34,3 +43,17 @@ app.use('/api/restore', require('./routes/restore'));
 app.listen( process.env.PORT, () => {
     console.log(`Server running on port ${ process.env.PORT }`);
 });
+
+
+/*
+
+1 Buscar todas las notificaciones que se hagan en esa hora y minuto
+2 enviar la misma notificacion a todos
+
+*/
+
+setInterval(interval.intervalFunc, 60000);
+
+
+
+

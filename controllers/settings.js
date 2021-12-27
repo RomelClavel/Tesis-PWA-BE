@@ -68,32 +68,3 @@ module.exports = {
     getSettings,
     updateSettings,
 }
-
-
-
-
-
-/*
-
-settings: {
-
-
-sid: uuidv4()
-    uid: user.id
-    name: "",
-    description:"",
-    photo:"",
-    notification: {
-        active: Boolean,
-        time: String,
-    },
-    order: [photos, tags, locations, weather],
-    language:"",
-
-
-
-    }
-
-
-
-*/

@@ -21,7 +21,8 @@ const SettingsSchema = Schema({
     },
     notification: {
         active: Boolean,
-        time: Date, //Type Date
+        time: Date, 
+        token: String,
     },
     order: [{
         type: String, //Preselect [photos, tags, locations, weather]
