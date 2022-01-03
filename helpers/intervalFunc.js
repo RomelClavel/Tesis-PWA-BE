@@ -26,13 +26,19 @@ const admin = require('firebase-admin');
                 tokens: registrationTokens,  
             };
 
-            admin.messaging().sendMulticast(message)
-                .then(response => {
-                    console.log(response.responses[0].error);
-                })
-                .catch(error => {
-                    console.log('Error occurred while sending push', error);
-                });
+            if(registrationTokens.length!==0){
+
+                admin.messaging().sendMulticast(message)
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        console.log('Error occurred while sending push', error);
+                    });
+            }else {
+                console.log('No reg tokens at this time')
+            }
+
             
 
         } catch (error) {
